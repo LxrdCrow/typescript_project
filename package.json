@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "verify": "tsc"
+    "tsc": "tsc",
+    "verify": "npm run tsc"
   },
   "keywords": [],
   "author": "",

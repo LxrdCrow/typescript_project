@@ -1,120 +1,111 @@
-// Creation of interfaces
-
-interface IMezzo {
-    tipo: 'bici' | 'scooter' | 'monopattino';
+interface IVehicle {
+    type: 'bike' | 'scooter' | 'electricScooter';
     id: string;
-    stato: 'disponibile' | 'in uso';
-    assegnaUtente(utente: IUtente): void;
+    status: 'available' | 'inUse';
+    assignUser(user: IUser): void;
 }
 
-interface IUtente {
-    nome: string;
-    cognome: string;
+interface IUser {
+    firstName: string;
+    lastName: string;
     email: string;
-    metodoPagamentoPreferito: string;
-    prenotaMezzo(mezzo: IMezzo): void;
+    preferredPaymentMethod: string;
+    bookVehicle(vehicle: IVehicle): void;
 }
 
-interface ICitta {
-    nome: string;
-    mezziDisponibili: IMezzo[];
-    aggiungiMezzo(mezzo: IMezzo): void;
+interface ICity {
+    name: string;
+    availableVehicles: IVehicle[];
+    addVehicle(vehicle: IVehicle): void;
 }
 
-// Creation of classes
 
-class Mezzo implements IMezzo {
-    tipo: 'bici' | 'scooter' | 'monopattino';
+class Vehicle implements IVehicle {
+    type: 'bike' | 'scooter' | 'electricScooter';
     id: string;
-    stato: 'disponibile' | 'in uso';
+    status: 'available' | 'inUse';
 
-    constructor(tipo: 'bici' | 'scooter' | 'monopattino', id: string) {
-        this.tipo = tipo;
+    constructor(type: 'bike' | 'scooter' | 'electricScooter', id: string) {
+        this.type = type;
         this.id = id;
-        this.stato = 'disponibile';
+        this.status = 'available';
     }
 
-    assegnaUtente(utente: IUtente): void {
-        if (this.stato === 'disponibile') {
-            this.stato = 'in uso';
-            console.log(`Mezzo ${this.id} assegnato a ${utente.nome} ${utente.cognome}`);
+    assignUser(user: IUser): void {
+        if (this.status === 'available') {
+            this.status = 'inUse';
+            console.log(`Vehicle ${this.id} assigned to ${user.firstName} ${user.lastName}`);
         } else {
-            console.log(`Mezzo ${this.id} non è disponibile`);
+            console.log(`Vehicle ${this.id} is not available`);
         }
     }
 }
 
-class Utente implements IUtente {
-    nome: string;
-    cognome: string;
+class User implements IUser {
+    firstName: string;
+    lastName: string;
     email: string;
-    metodoPagamentoPreferito: string;
+    preferredPaymentMethod: string;
 
-    constructor(nome: string, cognome: string, email: string, metodoPagamentoPreferito: string) {
-        this.nome = nome;
-        this.cognome = cognome;
+    constructor(firstName: string, lastName: string, email: string, preferredPaymentMethod: string) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.metodoPagamentoPreferito = metodoPagamentoPreferito;
+        this.preferredPaymentMethod = preferredPaymentMethod;
     }
 
-    prenotaMezzo(mezzo: IMezzo): void {
-        if (mezzo.stato === 'disponibile') {
-            mezzo.assegnaUtente(this);
-            console.log(`${this.nome} ${this.cognome} ha prenotato il mezzo con ID ${mezzo.id}`);
+    bookVehicle(vehicle: IVehicle): void {
+        if (vehicle.status === 'available') {
+            vehicle.assignUser(this);
+            console.log(`${this.firstName} ${this.lastName} booked vehicle with ID ${vehicle.id}`);
         } else {
-            console.log(`Il mezzo con ID ${mezzo.id} non è disponibile`);
+            console.log(`Vehicle with ID ${vehicle.id} is not available`);
         }
     }
 }
 
-class Citta implements ICitta {
-    nome: string;
-    mezziDisponibili: IMezzo[];
+class City implements ICity {
+    name: string;
+    availableVehicles: IVehicle[];
 
-    constructor(nome: string) {
-        this.nome = nome;
-        this.mezziDisponibili = [];
+    constructor(name: string) {
+        this.name = name;
+        this.availableVehicles = [];
     }
 
-    aggiungiMezzo(mezzo: IMezzo): void {
-        this.mezziDisponibili.push(mezzo);
-        console.log(`Mezzo con ID ${mezzo.id} aggiunto alla città ${this.nome}`);
+    addVehicle(vehicle: IVehicle): void {
+        this.availableVehicles.push(vehicle);
+        console.log(`Vehicle with ID ${vehicle.id} added to city ${this.name}`);
     }
 }
 
-// Creation of users
 
-const utente1: IUtente = new Utente('Mario', 'Rossi', 'mario.rossi@example.com', 'Carta di Credito');
-const utente2: IUtente = new Utente('Luca', 'Bianchi', 'luca.bianchi@example.com', 'PayPal');
+// User creation
+const user1: IUser = new User('Mario', 'Rossi', 'mario.rossi@example.com', 'Credit Card');
+const user2: IUser = new User('Beatrice', 'Verdi', 'beatrice.verdi@example.com', 'PayPal');
 
-// Creation of vehicles
+// Vehicle creation
+const bike: IVehicle = new Vehicle('bike', '001');
+const scooter: IVehicle = new Vehicle('scooter', '002');
+const electricScooter: IVehicle = new Vehicle('electricScooter', '003');
 
-const bici: IMezzo = new Mezzo('bici', '001');
-const scooter: IMezzo = new Mezzo('scooter', '002');
-const monopattino: IMezzo = new Mezzo('monopattino', '003');
-
-// Creation of cities
-
-const roma: ICitta = new Citta('Roma');
-const milano: ICitta = new Citta('Milano');
+// City creation
+const rome: ICity = new City('Rome');
+const florence: ICity = new City('Florence');
 
 // Adding vehicles to cities
-
-roma.aggiungiMezzo(bici);        // Output: Vehicle with ID 001 added to the city Roma
-roma.aggiungiMezzo(scooter);     // Output: Vehicle with ID 002 added to the city Roma
-milano.aggiungiMezzo(monopattino); // Output: Vehicle with ID 003 added to the city Milano
+rome.addVehicle(bike);
+rome.addVehicle(scooter);
+florence.addVehicle(electricScooter);
 
 // Booking vehicles by users
-
-utente1.prenotaMezzo(bici);     // Output: Vehicle 001 assigned to Mario Rossi
-utente2.prenotaMezzo(scooter);  // Output: Vehicle 002 assigned to Luca Bianchi
+user1.bookVehicle(bike);
+user2.bookVehicle(scooter);
 
 // Attempt to book a vehicle already in use
+user1.bookVehicle(scooter);
 
-utente1.prenotaMezzo(scooter);  // Output: The vehicle with ID 002 is not available
-
-// Adding a new vehicle and booking
-
-const bici2: IMezzo = new Mezzo('bici', '004');
-roma.aggiungiMezzo(bici2);      // Output: Vehicle with ID 004 added to the city Roma
-utente2.prenotaMezzo(bici2);    // Output: Vehicle 004 assigned to Luca Bianchi
+// Adding a new vehicle and booking it
+const bike2: IVehicle = new Vehicle('bike', '004');
+florence.addVehicle(bike2);
+user2.bookVehicle(bike2);
